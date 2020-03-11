@@ -1,4 +1,4 @@
-function [sintetizadas] = warp_optical_flow_blocks(flow_up, flow_down, flow_left, flow_right, vertical_pc, horizontal_pc, group_vector, type, input_path, reference_path, output_path)
+function warp_optical_flow_blocks(flow_up, flow_down, flow_left, flow_right, vertical_pc, horizontal_pc, group_vector, type, input_path, reference_path, output_path)
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%% LENSLET %%%%%%%%%%%%%
@@ -285,14 +285,16 @@ function [sintetizadas] = warp_optical_flow_blocks(flow_up, flow_down, flow_left
     %%%%%%%%%%% SYNTHETIC %%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if contains(type, 'synthetic')
-        ref_SAI = im2double(imread(['/home/douglascorrea/light-field/dataset/black_border_central_sai/', lf_name, '_central_border_qp22.ppm']));
+        ref_SAI = im2double(imread(reference_path));
 
 %         ref_SAI = im2double(imread([path_lf '004_004.ppm']));
         
         [height, width, color_channels] = size(ref_SAI);
-        fprintf('Encoding light field\n');
+       fprintf('Encoding light field\n');
         fprintf(['- Type: ', type, '\n']);
-        fprintf(['- Light Field: ', lf_name, '\n']);
+        fprintf(['- Light Field: ', input_path, '\n']);
+        fprintf(['- Reference Light Field: ', reference_path, '\n']);
+        fprintf(['- Output path: ', output_path, '\n']);
         fprintf(['- SAI size: ', num2str(width), 'x', num2str(height), '\n']);
         
         sintetizadas = cell(9,9);
@@ -537,7 +539,7 @@ function [sintetizadas] = warp_optical_flow_blocks(flow_up, flow_down, flow_left
                     horizontal_displacement(:, 512, :) = ref_SAI(:, 512, :);
                 end 
                 
-                file_name = ['results/', num2str(sai_hor-1,'%03.f'), '_', num2str(sai_ver-1,'%03.f'),'.ppm'];
+                file_name = [output_path, num2str(sai_hor-1,'%03.f'), '_', num2str(sai_ver-1,'%03.f'),'.ppm'];
                 fprintf(['\t\t -Saving warped light field: ', file_name, '\n']);
                 imwrite(im2uint16(horizontal_displacement),file_name);
 %                 sintetizadas{sai_ver, sai_hor} = horizontal_displacement;
@@ -550,12 +552,15 @@ function [sintetizadas] = warp_optical_flow_blocks(flow_up, flow_down, flow_left
     %%%%%%%%%%%% HDCA %%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if contains(type, 'HDCA')
-        ref_SAI = im2double(imread([path_lf '09_09.png']));
+        ref_SAI = im2double(imread(reference_path));
         
+        %ref_SAI = im2double(imread([path_lf '007_007.ppm']));
         [height, width, color_channels] = size(ref_SAI);
         fprintf('Encoding light field\n');
         fprintf(['- Type: ', type, '\n']);
-        fprintf(['- Light Field: ', lf_name, '\n']);
+        fprintf(['- Light Field: ', input_path, '\n']);
+        fprintf(['- Reference Light Field: ', reference_path, '\n']);
+        fprintf(['- Output path: ', output_path, '\n']);
         fprintf(['- SAI size: ', num2str(width), 'x', num2str(height), '\n']);
         
         sintetizadas = cell(17,17);
@@ -807,7 +812,7 @@ function [sintetizadas] = warp_optical_flow_blocks(flow_up, flow_down, flow_left
                     horizontal_displacement(height, :, :) = ref_SAI(height, :, :);
                     horizontal_displacement(:, width, :) = ref_SAI(:, width, :);
                 end
-                file_name = ['results/', num2str(sai_hor-1,'%02.f'), '_', num2str(sai_ver-1,'%02.f'),'.png'];
+                file_name = [output_path, num2str(sai_hor-1,'%02.f'), '_', num2str(sai_ver-1,'%02.f'),'.png'];
                 fprintf(['\t\t -Saving warped light field: ', file_name, '\n']);
                 imwrite(im2uint16(horizontal_displacement),file_name);
 %                 sintetizadas{sai_ver, sai_hor} = horizontal_displacement;

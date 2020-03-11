@@ -70,11 +70,11 @@ function [flow_left, flow_right, flow_up, flow_down] = generate_flow_references(
     end      
 
     if contains(lf_type, 'synthetic')
-        central_SAI = imread([path_lf '004_004.ppm']);
-        left_SAI = imread([path_lf '000_004.ppm']);
-        right_SAI = imread([path_lf '008_004.ppm']);
-        up_SAI = imread([path_lf '004_000.ppm']);
-        down_SAI = imread([path_lf '004_008.ppm']);
+        central_SAI = imread([input_path '004_004.ppm']);
+        left_SAI = imread([input_path '000_004.ppm']);
+        right_SAI = imread([input_path '008_004.ppm']);
+        up_SAI = imread([input_path '004_000.ppm']);
+        down_SAI = imread([input_path '004_008.ppm']);
 
         list_up = {central_SAI up_SAI};
         list_down = {central_SAI down_SAI};
@@ -140,11 +140,11 @@ function [flow_left, flow_right, flow_up, flow_down] = generate_flow_references(
     end
     
      if contains(lf_type, 'HDCA')
-        central_SAI = imread([path_lf '09_09.png']);
-        left_SAI = imread([path_lf '00_09.png']);
-        right_SAI = imread([path_lf '16_09.png']);
-        up_SAI = imread([path_lf '09_00.png']);
-        down_SAI = imread([path_lf '09_16.png']);
+        central_SAI = imread([input_path '09_09.png']);
+        left_SAI = imread([input_path '00_09.png']);
+        right_SAI = imread([input_path '16_09.png']);
+        up_SAI = imread([input_path '09_00.png']);
+        down_SAI = imread([input_path '09_16.png']);
 
         list_up = {central_SAI up_SAI};
         list_down = {central_SAI down_SAI};
