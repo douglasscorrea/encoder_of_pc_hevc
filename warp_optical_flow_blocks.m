@@ -1,17 +1,20 @@
-function [sintetizadas] = warp_optical_flow_blocks(flow_up, flow_down, flow_left, flow_right, vertical_pc, horizontal_pc, path_lf, type, lf_name, group_vector)
+function [sintetizadas] = warp_optical_flow_blocks(flow_up, flow_down, flow_left, flow_right, vertical_pc, horizontal_pc, group_vector, type, input_path, reference_path, output_path)
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%% LENSLET %%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if contains(type, 'lenslet')
         ref_SAI = zeros(434, 625, 3);
-        ref_SAI_wBorder = im2double(imread(['/home/douglascorrea/light-field/dataset/black_border_central_sai/', lf_name, '_central_border_qp37.ppm']));
+        ref_SAI_wBorder = im2double(imread(reference_path));
         ref_SAI = ref_SAI_wBorder(1:434, 1:625, :);
+        
         %ref_SAI = im2double(imread([path_lf '007_007.ppm']));
         [height, width, color_channels] = size(ref_SAI);
         fprintf('Encoding light field\n');
         fprintf(['- Type: ', type, '\n']);
-        fprintf(['- Light Field: ', lf_name, '\n']);
+        fprintf(['- Light Field: ', input_path, '\n']);
+        fprintf(['- Reference Light Field: ', reference_path, '\n']);
+        fprintf(['- Output path: ', output_path, '\n']);
         fprintf(['- SAI size: ', num2str(width), 'x', num2str(height), '\n']);
 
         sintetizadas = cell(15,15);
@@ -270,7 +273,7 @@ function [sintetizadas] = warp_optical_flow_blocks(flow_up, flow_down, flow_left
                     horizontal_displacement(:, 625, :) = ref_SAI(:, 625, :);
                 end
                 
-                file_name = ['results/', num2str(sai_hor-1,'%03.f'), '_', num2str(sai_ver-1,'%03.f'),'.ppm'];
+                file_name = [output_path, num2str(sai_hor-1,'%03.f'), '_', num2str(sai_ver-1,'%03.f'),'.ppm'];
                 fprintf(['\t\t -Saving warped light field: ', file_name, '\n']);
                 imwrite(im2uint16(horizontal_displacement),file_name);
 %                 sintetizadas{sai_ver, sai_hor} = horizontal_displacement;

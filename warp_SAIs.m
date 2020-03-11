@@ -1,4 +1,4 @@
-function [] = warp_SAIs(lf_type, lf_name, prediction_type, group_vector, lf_path)
+function [] = warp_SAIs(lf_type, prediction_type, group_vector, input_path, reference_path, output_path)
     clc
     tic
     
@@ -6,17 +6,17 @@ function [] = warp_SAIs(lf_type, lf_name, prediction_type, group_vector, lf_path
     %%%%%%%%%%%% LENSLET %%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if contains(lf_type, 'lenslet')
-        path_lf = [lf_path, '/', lf_type, '/', lf_name, '/'];
+        %path_lf = [lf_path, '/', lf_type, '/', lf_name, '/'];
         ppm_list = {'000', '007', '014'};
 
-        ref = rgb2gray(imread([path_lf, '007_007.ppm']));
+        ref = rgb2gray(imread([input_path, '007_007.ppm']));
 
         deltasX = zeros(3,3);
         deltasY = zeros(3,3);
 
         for i = 1:3
             for j=1:3
-                arq1 = [path_lf, ppm_list{i}, '_', ppm_list{j} , '.ppm'];
+                arq1 = [input_path, ppm_list{i}, '_', ppm_list{j} , '.ppm'];
                 current = rgb2gray(imread(arq1));
                 if(max(max(current)) > 0)
                     [deltaX, deltaY] = calc_phase_correlation(ref,current);     
@@ -31,15 +31,15 @@ function [] = warp_SAIs(lf_type, lf_name, prediction_type, group_vector, lf_path
         left_PC = abs(deltasX(2,1));
         right_PC = abs(deltasX(2,3));
         
-        left_horizontal_PC = zeros(8,1);
-        right_horizontal_PC = zeros(8,1);
-        up_vertical_PC = zeros(8,1);
-        down_vertical_PC = zeros(8,1);
-
-        left_horizontal_PC(1,1) = left_PC;
-        right_horizontal_PC(8,1) = right_PC;
-        up_vertical_PC(1,1) = up_PC;
-        down_vertical_PC(8,1) = down_PC;
+%         left_horizontal_PC = zeros(8,1);
+%         right_horizontal_PC = zeros(8,1);
+%         up_vertical_PC = zeros(8,1);
+%         down_vertical_PC = zeros(8,1);
+% 
+%         left_horizontal_PC(1,1) = left_PC;
+%         right_horizontal_PC(8,1) = right_PC;
+%         up_vertical_PC(1,1) = up_PC;
+%         down_vertical_PC(8,1) = down_PC;
 
         vert_PC = zeros(15,1);
         hori_PC = zeros(15,1);
@@ -59,21 +59,13 @@ function [] = warp_SAIs(lf_type, lf_name, prediction_type, group_vector, lf_path
             vert_PC(i,1) = up_PC + up_PC/7 - (up_PC/7)*i;  
         end
 
-        [left_OF,right_OF,up_OF,down_OF] = generate_flow_references(path_lf, lf_type);
+        [left_OF,right_OF,up_OF,down_OF] = generate_flow_references(input_path, lf_type);
         
         if contains(prediction_type, 'block')
-            sint = warp_optical_flow_blocks(up_OF, down_OF, left_OF, right_OF, vert_PC, hori_PC, path_lf, 'lenslet', lf_name, group_vector);
+            sint = warp_optical_flow_blocks(up_OF, down_OF, left_OF, right_OF, vert_PC, hori_PC, group_vector, 'lenslet', input_path, reference_path, output_path);
         else
             sint = warp_optical_flow(up_OF, down_OF, left_OF, right_OF, vert_PC, hori_PC, path_lf, 'lenslet');
         end
-
-%         for vert_sai = 1:15
-%             for hor_sai = 1:15
-%                 file_name = ['results/', num2str(hor_sai-1,'%03.f'), '_', num2str(vert_sai-1,'%03.f'),'.ppm'];
-%                 disp(file_name)
-%                 imwrite(im2uint16(sint{vert_sai, hor_sai}),file_name);
-%             end
-%         end
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

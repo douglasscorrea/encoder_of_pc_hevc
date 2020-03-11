@@ -1,10 +1,10 @@
-function [flow_left, flow_right, flow_up, flow_down] = generate_flow_references(path_lf, lf_type)
+function [flow_left, flow_right, flow_up, flow_down] = generate_flow_references(input_path, lf_type)
     if contains(lf_type, 'lenslet')
-        central_SAI = imread([path_lf '007_007.ppm']);
-        left_SAI = imread([path_lf '000_007.ppm']);
-        right_SAI = imread([path_lf '014_007.ppm']);
-        up_SAI = imread([path_lf '007_000.ppm']);
-        down_SAI = imread([path_lf '007_014.ppm']);
+        central_SAI = imread([input_path '007_007.ppm']);
+        left_SAI = imread([input_path '000_007.ppm']);
+        right_SAI = imread([input_path '014_007.ppm']);
+        up_SAI = imread([input_path '007_000.ppm']);
+        down_SAI = imread([input_path '007_014.ppm']);
 
         list_up = {central_SAI up_SAI};
         list_down = {central_SAI down_SAI};
