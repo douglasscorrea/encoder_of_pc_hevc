@@ -6,6 +6,7 @@ class Paths:
 		self.output_path = ''
 		self.residues_path = ''
 		self.yuv_path = ''
+		self.str_path = ''
 
 
 	def set_paths(self, parameters):
@@ -15,7 +16,7 @@ class Paths:
 		self.of_pc_lf_path = self.output_path + 'of+pc/'
 		self.residues_path = self.output_path + 'residues/'
 		self.yuv_path = self.output_path + 'yuv/'
-
+		self.str_path = self.output_path + 'str/'
 
 	def print_paths(self):
 		print('Original dataset: ' + self.org_lf_path)
@@ -24,3 +25,4 @@ class Paths:
 		print('OF+PC dataset: ' + self.of_pc_lf_path)
 		print('Residues dataset: ' + self.residues_path)
 		print('YUV path: ' + self.yuv_path)
+		print('Bitstream path: ' + self.str_path)
